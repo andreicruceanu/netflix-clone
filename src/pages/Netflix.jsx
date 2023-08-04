@@ -6,14 +6,26 @@ import backgroundImage from "../assets/images/home.jpg";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { getGenres } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMovies, getGenres } from "../store";
+import Slider from "../components/Slider";
 export default function Netflix() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const movies = useSelector((state) => state.netflix.movies);
+  const genres = useSelector((state) => state.netflix.genres);
+  const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
   useEffect(() => {
     dispatch(getGenres());
-  });
+  }, []);
+
+  useEffect(() => {
+    if (genresLoaded) {
+      dispatch(fetchMovies({ genres, type: "all" }));
+    }
+  }, [genresLoaded]);
+
+  console.log(movies);
 
   return (
     <Container>
@@ -34,6 +46,7 @@ export default function Netflix() {
           </GroupButtons>
         </Content>
       </Hero>
+      {movies && <Slider movies={movies} />}
     </Container>
   );
 }
