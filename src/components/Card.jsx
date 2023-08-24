@@ -6,8 +6,7 @@ import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
-import { BsCheck } from "react-icons/bs";
-export default function Card({ movieData }) {
+export default React.memo(function Card({ movieData }) {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   return (
@@ -62,8 +61,7 @@ export default function Card({ movieData }) {
       )}
     </Container>
   );
-}
-
+});
 const Container = styled.div`
   width: 260px;
   max-width: 260px;
