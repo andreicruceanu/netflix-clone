@@ -6,9 +6,31 @@ import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
+import axios from "axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth } from "../utils/firebase-config";
 export default React.memo(function Card({ movieData }) {
+  const [email, setEmail] = useState(undefined);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+
+  onAuthStateChanged(firebaseAuth, (currentUser) => {
+    if (currentUser) {
+      setEmail(currentUser.email);
+    } else navigate("/login");
+  });
+
+  const addToList = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/user/add", {
+        email,
+        data: movieData,
+      });
+      ////localStorage.setItem("favoriteList", JSON.stringify(movieData));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Container
       onMouseEnter={() => setIsHovered(true)}
@@ -43,7 +65,7 @@ export default React.memo(function Card({ movieData }) {
                 />
                 <RiThumbUpFill title="Like" />
                 <RiThumbDownFill title="Dislike" />
-                <AiOutlinePlus title="Add to my list" />
+                <AiOutlinePlus title="Add to my list" onClick={addToList} />
               </Controls>
               <MoreInfo>
                 <BiChevronDown title="More Info" />
