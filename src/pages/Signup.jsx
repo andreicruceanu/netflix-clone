@@ -8,6 +8,7 @@ import BackgroundImg from "../components/BackgroundImage";
 import Header from "../components/Header";
 import { firebaseAuth } from "../utils/firebase-config";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +22,18 @@ export default function Signup() {
   const handleSubmit = async () => {
     try {
       const { email, password } = formValues;
-      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      const response = await axios.post(
+        "http://localhost:5000/api/user/register",
+        { email }
+      );
+      if (response.data) {
+        const user = await createUserWithEmailAndPassword(
+          firebaseAuth,
+          email,
+          password
+        );
+        localStorage.setItem("email", user.user.email);
+      }
     } catch (err) {
       console.log(err);
     }

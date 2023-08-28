@@ -13,14 +13,21 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(firebaseAuth, email, password);
+      const user = await signInWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
+      localStorage.setItem("email", user.user.email);
     } catch (err) {
       console.log(err);
     }
   };
 
   onAuthStateChanged(firebaseAuth, (currentUser) => {
-    if (currentUser) navigate("/");
+    if (currentUser) {
+      navigate("/");
+    }
   });
   return (
     <Container>

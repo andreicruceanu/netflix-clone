@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext } from "react";
 import CardSlider from "./CardSlider";
 
 export default React.memo(function Slider({ movies }) {

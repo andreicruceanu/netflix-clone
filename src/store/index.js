@@ -74,6 +74,15 @@ const NetflixSlice = createSlice({
     moviesArray: [],
     genresLoaded: false,
     genres: [],
+    listFavorites: [],
+  },
+  reducers: {
+    addFavorite: (state, action) => {
+      state.listFavorites = [...state.listFavorites, action.payload];
+    },
+    setListFavorites: (state, action) => {
+      state.listFavorites = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getGenres.fulfilled, (state, action) => {
@@ -88,6 +97,8 @@ const NetflixSlice = createSlice({
     });
   },
 });
+
+export const { setListFavorites } = NetflixSlice.actions;
 
 export const store = configureStore({
   reducer: {

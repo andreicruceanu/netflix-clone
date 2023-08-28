@@ -7,14 +7,17 @@ import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMovies, getGenres } from "../store";
+import { fetchMovies, getGenres, setListFavorites } from "../store";
 import Slider from "../components/Slider";
+import axios from "axios";
 export default function Netflix() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const movies = useSelector((state) => state.netflix.movies);
   const genres = useSelector((state) => state.netflix.genres);
   const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
+  const userEmail = localStorage.getItem("email");
+
   useEffect(() => {
     dispatch(getGenres());
   }, []);
@@ -25,7 +28,21 @@ export default function Netflix() {
     }
   }, [genresLoaded]);
 
-  console.log(movies);
+  useEffect(() => {
+    const getFavorites = async () => {
+      const response = await axios.get(
+        `http://localhost:5000/api/user/favoriteList/${userEmail}`
+      );
+      console.log(response.data?.listFavorites);
+      if (response.data?.listFavorites) {
+        dispatch(setListFavorites(response.data?.listFavorites));
+      } else {
+        dispatch(setListFavorites([]));
+      }
+    };
+    if (userEmail) getFavorites();
+    if (!userEmail) dispatch(setListFavorites([]));
+  }, [userEmail, dispatch]);
 
   return (
     <Container>

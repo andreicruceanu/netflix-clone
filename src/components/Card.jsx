@@ -3,17 +3,21 @@ import styled from "styled-components";
 import video from "../assets/trailer_h480p.mov";
 import { useNavigate } from "react-router-dom";
 import { IoPlayCircleSharp } from "react-icons/io5";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineHeart } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
 import axios from "axios";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
+import { useSelector } from "react-redux";
+import favoriteUtils from "../utils/favorite.utils";
 export default React.memo(function Card({ movieData }) {
+  const favoriteList = useSelector((state) => state.netflix.listFavorites);
   const [email, setEmail] = useState(undefined);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
+  console.log(movieData);
   onAuthStateChanged(firebaseAuth, (currentUser) => {
     if (currentUser) {
       setEmail(currentUser.email);
@@ -26,7 +30,6 @@ export default React.memo(function Card({ movieData }) {
         email,
         data: movieData,
       });
-      ////localStorage.setItem("favoriteList", JSON.stringify(movieData));
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +68,9 @@ export default React.memo(function Card({ movieData }) {
                 />
                 <RiThumbUpFill title="Like" />
                 <RiThumbDownFill title="Dislike" />
-                <AiOutlinePlus title="Add to my list" onClick={addToList} />
+                {favoriteUtils.check({ favoriteList, id: movieData.id }) && (
+                  <AiOutlineHeart title="Add to my list" onClick={addToList} />
+                )}
               </Controls>
               <MoreInfo>
                 <BiChevronDown title="More Info" />
