@@ -80,6 +80,11 @@ const NetflixSlice = createSlice({
     addFavorite: (state, action) => {
       state.listFavorites = [...state.listFavorites, action.payload];
     },
+    removeFavorite: (state, action) => {
+      state.listFavorites = state.listFavorites.filter(
+        (movie) => movie.id !== action.payload.id
+      );
+    },
     setListFavorites: (state, action) => {
       state.listFavorites = action.payload;
     },
@@ -98,7 +103,8 @@ const NetflixSlice = createSlice({
   },
 });
 
-export const { setListFavorites } = NetflixSlice.actions;
+export const { setListFavorites, addFavorite, removeFavorite } =
+  NetflixSlice.actions;
 
 export const store = configureStore({
   reducer: {

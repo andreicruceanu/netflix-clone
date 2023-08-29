@@ -3,21 +3,21 @@ import styled from "styled-components";
 import video from "../assets/trailer_h480p.mov";
 import { useNavigate } from "react-router-dom";
 import { IoPlayCircleSharp } from "react-icons/io5";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
 import axios from "axios";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import favoriteUtils from "../utils/favorite.utils";
+import { addFavorite, removeFavorite } from "../store";
 export default React.memo(function Card({ movieData }) {
   const favoriteList = useSelector((state) => state.netflix.listFavorites);
   const [email, setEmail] = useState(undefined);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
-
-  console.log(movieData);
+  const dispatch = useDispatch();
   onAuthStateChanged(firebaseAuth, (currentUser) => {
     if (currentUser) {
       setEmail(currentUser.email);
@@ -26,10 +26,31 @@ export default React.memo(function Card({ movieData }) {
 
   const addToList = async () => {
     try {
-      await axios.post("http://localhost:5000/api/user/add", {
+      const response = await axios.post("http://localhost:5000/api/user/add", {
         email,
         data: movieData,
       });
+      if (response.data) {
+        dispatch(addFavorite(response.data));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const removeFromLikedMovies = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:5000/api/user/remove",
+        {
+          email,
+          mediaId: movieData.id,
+        }
+      );
+      console.log(response);
+      if (response.data) {
+        console.log("aici");
+        dispatch(removeFavorite(movieData));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -63,13 +84,24 @@ export default React.memo(function Card({ movieData }) {
             <IconsGroup>
               <Controls>
                 <IoPlayCircleSharp
+                  className="icon-play"
                   title="Play"
                   onClick={() => navigate("/player")}
                 />
-                <RiThumbUpFill title="Like" />
-                <RiThumbDownFill title="Dislike" />
-                {favoriteUtils.check({ favoriteList, id: movieData.id }) && (
-                  <AiOutlineHeart title="Add to my list" onClick={addToList} />
+                <RiThumbUpFill className="icon-like" title="Like" />
+                <RiThumbDownFill className="icon-dislike" title="Dislike" />
+                {favoriteUtils.check({ favoriteList, id: movieData.id }) ? (
+                  <AiFillHeart
+                    className="icon-heart icon-red"
+                    title="Remove movie to list"
+                    onClick={removeFromLikedMovies}
+                  />
+                ) : (
+                  <AiOutlineHeart
+                    className="icon-heart-outline"
+                    onClick={addToList}
+                    title="Add to my list"
+                  />
                 )}
               </Controls>
               <MoreInfo>
@@ -147,18 +179,31 @@ const IconsGroup = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
   svg {
     font-size: 2rem;
     cursor: pointer;
     transition: 0.3s ease-in-out;
   }
-  svg:hover {
+  .icon-like:hover {
+    color: #b8b8b8;
+  }
+  .icon-dislike:hover {
+    color: #b8b8b8;
+  }
+  .icon-play:hover {
+    color: #b8b8b8;
+  }
+  .icon-heart-outline:hover {
     color: #b8b8b8;
   }
 `;
 const Controls = styled.div`
   display: flex;
   gap: 1rem;
+  .icon-red {
+    color: red;
+  }
 `;
 const MoreInfo = styled.div``;
 const Genres = styled.div`
