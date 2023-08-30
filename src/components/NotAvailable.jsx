@@ -7,6 +7,8 @@ export default function NotAvailable({ type }) {
         return "No Movies avaialble for the selected genre. Please select a different genre.";
       case "tv":
         return "No TV Shows avaialble for the selected genre. Please select a different genre.";
+      case "noFavorite":
+        return "You have not added any movies to your favorites.";
       default:
         return "Not Available";
     }
