@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Slider from "../components/Slider";
 import NotAvailable from "../components/NotAvailable";
 import { useNavigate } from "react-router-dom";
-import { fetchMovies, getGenres } from "../store";
+import { fetchMovies, getGenres, reset } from "../store";
 import SelectGenre from "../components/SelectGenre";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
 
 export default function Movies() {
   const [user, setUser] = useState(undefined);
-
+  const [isScrolled, setIsScrolled] = useState(false);
   const movies = useSelector((state) => state.netflix.movies);
   const genres = useSelector((state) => state.netflix.genres);
   const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
@@ -32,13 +32,19 @@ export default function Movies() {
     if (currentUser) {
       setUser(currentUser.uid);
     } else {
+      dispatch(reset());
       navigate("/login");
     }
   });
 
+  window.onscroll = () => {
+    setIsScrolled(window.scrollY === 0 ? false : true);
+    return () => (window.onscroll = null);
+  };
+
   return (
     <Container>
-      <Navbar />
+      <Navbar isScrolled={isScrolled} />
       <Content>
         <SelectGenre genres={genres} type="movie" />
         {movies && movies.length ? (

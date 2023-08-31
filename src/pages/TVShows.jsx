@@ -12,6 +12,7 @@ import { fetchMovies, getGenres } from "../store";
 
 export default function TVShows() {
   const [user, setUser] = useState(undefined);
+  const [isScrolled, setIsScrolled] = useState(false);
   const movies = useSelector((state) => state.netflix.movies);
   const genres = useSelector((state) => state.netflix.genres);
 
@@ -35,9 +36,14 @@ export default function TVShows() {
     else navigate("/login");
   });
 
+  window.onscroll = () => {
+    setIsScrolled(window.scrollY === 0 ? false : true);
+    return () => (window.onscroll = null);
+  };
+
   return (
     <Container>
-      <Navbar />
+      <Navbar isScrolled={isScrolled} />
       <Content>
         <SelectGenre genres={genres} type="tv" />
         {movies && movies.length ? (

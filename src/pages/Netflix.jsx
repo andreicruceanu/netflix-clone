@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import styled from "styled-components";
 import TitleHiro from "../assets/images/homeTitle.webp";
@@ -11,6 +11,8 @@ import { fetchMovies, getGenres, setListFavorites } from "../store";
 import Slider from "../components/Slider";
 import axios from "axios";
 export default function Netflix() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const movies = useSelector((state) => state.netflix.movies);
@@ -44,9 +46,14 @@ export default function Netflix() {
     if (!userEmail) dispatch(setListFavorites([]));
   }, [userEmail, dispatch]);
 
+  window.onscroll = () => {
+    setIsScrolled(window.scrollY === 0 ? false : true);
+    return () => (window.onscroll = null);
+  };
+
   return (
     <Container>
-      <Navbar />
+      <Navbar isScrolled={isScrolled} />
       <Hero>
         <HeroImg src={backgroundImage} alt="Movie Logo" />
         <Content>

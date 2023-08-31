@@ -12,7 +12,7 @@ import { firebaseAuth } from "../utils/firebase-config";
 import { useDispatch, useSelector } from "react-redux";
 import favoriteUtils from "../utils/favorite.utils";
 import { addFavorite, removeFavorite } from "../store";
-export default React.memo(function Card({ movieData }) {
+export default React.memo(function Card({ movieData, onRemove }) {
   const favoriteList = useSelector((state) => state.netflix.listFavorites);
   const [email, setEmail] = useState(undefined);
   const [isHovered, setIsHovered] = useState(false);
@@ -46,15 +46,18 @@ export default React.memo(function Card({ movieData }) {
           mediaId: movieData.id,
         }
       );
-      console.log(response);
       if (response.data) {
-        console.log("aici");
         dispatch(removeFavorite(movieData));
+        if (onRemove) {
+          console.log("aici");
+          onRemove(movieData.id);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(favoriteList);
   return (
     <Container
       onMouseEnter={() => setIsHovered(true)}

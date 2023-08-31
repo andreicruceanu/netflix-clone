@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaPowerOff, FaSearch } from "react-icons/fa";
 import { firebaseAuth } from "../utils/firebase-config";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-export default function Navbar() {
+export default function Navbar({ isScrolled }) {
   const [showSearch, setShowSearch] = useState(false);
   const [inputHover, setInputHover] = useState(false);
   const navigate = useNavigate();
@@ -18,9 +18,10 @@ export default function Navbar() {
   onAuthStateChanged(firebaseAuth, (currentUser) => {
     if (!currentUser) navigate("/login");
   });
+  console.log(isScrolled);
   return (
     <Container>
-      <Nav>
+      <Nav className={`${isScrolled ? "scrolled" : ""}`}>
         <LeftMenu>
           <WrapLogo href="/">
             <Logo src={logo} alt="Netflix Logo" />
@@ -64,12 +65,15 @@ export default function Navbar() {
     </Container>
   );
 }
-
-const Container = styled.div``;
+const Container = styled.div`
+  .scrolled {
+    background-color: black;
+  }
+`;
 const Nav = styled.nav`
   position: fixed;
   top: 0;
-  height: 6.5rem;
+  height: 6rem;
   width: 100%;
   display: flex;
   align-items: center;

@@ -88,6 +88,10 @@ const NetflixSlice = createSlice({
     setListFavorites: (state, action) => {
       state.listFavorites = action.payload;
     },
+    reset: (state, action) => {
+      console.log("aiciiii");
+      state.listFavorites = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getGenres.fulfilled, (state, action) => {
@@ -103,7 +107,7 @@ const NetflixSlice = createSlice({
   },
 });
 
-export const { setListFavorites, addFavorite, removeFavorite } =
+export const { setListFavorites, addFavorite, removeFavorite, reset } =
   NetflixSlice.actions;
 
 export const store = configureStore({
