@@ -1,0 +1,93 @@
+.navbar {
+  color: white;
+  width: 100%;
+  font-size: 14px;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  background: linear-gradient(to top, transparent 0%, rgb(0, 0, 0, 0.3) 50%);
+  transition: 0.3s;
+  &.scrolled {
+    background-color: var(--main-color);
+  }
+}
+.container {
+  padding: 0px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+.left {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  .link-logo {
+    display: flex;
+  }
+  .logo {
+    margin-right: 40px;
+    width: 170px;
+  }
+  .menuList {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+  .menuItem {
+    padding: 5px;
+    margin-right: 20px;
+  }
+  .link-menu {
+    text-decoration: none;
+    color: white;
+    text-transform: uppercase;
+    font-size: 16px;
+    padding: 0px 3px;
+    cursor: pointer;
+  }
+}
+.right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .icon {
+    margin: 0px 15px;
+    cursor: pointer;
+    font-size: 28px;
+  }
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  .profile {
+    display: flex;
+    align-items: center;
+    position: relative;
+    .options {
+      display: none;
+      background-color: var(--main-color);
+      border-radius: 5px;
+    }
+    span {
+      padding: 10px;
+      cursor: pointer;
+    }
+    &:hover {
+      .options {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 20px;
+      }
+      .options span:hover {
+        background-color: red;
+      }
+    }
+  }
+}
